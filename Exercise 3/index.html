@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Table Planet - Exercise 3</title>
+        <link rel="stylesheet" href="assets/css/style.css">
+        <script src="assets/js/jQuery.js"></script>
+        <!-- <script src="data.js"></script> -->
+        <script src="assets/js/axios.js"></script>
+        <script src="assets/js/materialize.js"></script>
+        <style>
+            body { margin:50px; }
+            #content { border: 1px solid #ffffff; padding: 30px; border-radius: 8px; margin-bottom:10px; background-color: #ffffff}
+        </style>
+    </head>
+    <body>
+        <div class="input-field col s12">
+            <input id="planet" type="text" class="validate">
+                <label for="planet">Cari</label>
+        </div>
+           
+        <div class="columns">
+            <div id="content" class="column is-three-quarters">
+                <table id="table" class="highlight centered">
+                    <thead>
+                        <tr>
+                            <th>Nama Planet</th>
+                            <th>Periode Rotasi</th>
+                            <th>Periode Orbit</th>
+                            <th>Diameter</th>
+                            <th>Iklim</th>
+                            <th>Gravitasi</th>
+                            <th>Tanah</th>
+                            <th>Air Permukaan</th>
+                            <th>Populasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabel">
+                        
+                    </tbody>
+                </table>
+                <script>
+                    var apiSwapi = "https://swapi.co/api/planets/";
+
+                    function getData(){
+                        return axios.get(apiSwapi)
+                        .then(response => {
+                            return response.data;
+                            console.log('Data ditemukan');
+                        })
+                        .catch(function(error){
+                            console.log('Data tidak ditemukan');
+                        })
+                    }
+
+                    $(document).ready(function(){
+                        $("#planet").on("keyup", function() {
+                            var value = $(this).val().toLowerCase();
+                            $("#tabel tr").filter(function() {
+                                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                            });
+                        });
+                    });
+
+                    getData().then(data => {
+                        data.results.forEach(li => {
+                            document.querySelector('#tabel').insertAdjacentHTML('beforeend',
+                            '<td>'+li.name+'</td>'
+                            +'<td>'+li.rotation_period+'</td>'
+                            +'<td>'+li.orbital_period+'</td>'
+                            +'<td>'+li.diameter+'</td>'
+                            +'<td>'+li.climate+'</td>'
+                            +'<td>'+li.gravity+'</td>'
+                            +'<td>'+li.terrain+'</td>'
+                            +'<td>'+li.surface_water+'</td>'
+                            +'<td>'+li.population+'</td>')
+                        });
+                    })                    
+                </script>
+            </div>
+        </div>
+    </body>
+</html>
